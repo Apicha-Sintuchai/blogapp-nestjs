@@ -1,33 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+
 import * as fs from 'fs';
 import { BlogSchema } from 'src/Schema/BlogSchema';
+import { Model } from 'mongoose';
+import { Auth } from 'src/Schema/AuthSchema';
 
 @Injectable()
 export class BlogAppService {
   constructor(
     @InjectModel(BlogSchema.name) private ModelBlog: Model<BlogSchema>,
+    @InjectModel(Auth.name) private ModelAuth: Model<Auth>,
   ) {}
-  async findAll(): Promise<BlogSchema[]> {
-    return this.ModelBlog.find().sort({ 'Data.HearderPost': -1 });
-  }
 
-  async create(Data: any, file: Express.Multer.File): Promise<BlogSchema> {
-    const savaall = new this.ModelBlog({
-      Data: {
-        HearderPost: Data.HearderPost,
-        HearderTitle: Data.HearderTitle,
-        file: file.filename,
-        Datacomement: Data.Datacomement,
-      },
+  async findAll(): Promise<BlogSchema[]> {
+    return this.ModelBlog.find().sort({ 'Data.HearderPost': 1 });
+  }
+  async create({ ...Data }): Promise<BlogSchema> {
+    const filename = Data.file.filename;
+    const createdBlog = new this.ModelBlog({
+      title: Data.req.title,
+      description: Data.req.description,
+      file: filename,
+      comment: Data.req.comment,
     });
-    return savaall.save();
+    return createdBlog.save();
   }
   async deleteone(id: any): Promise<BlogSchema> {
     const deleteonebyid = await this.ModelBlog.findOneAndDelete({ _id: id });
-    if (deleteonebyid?.Data.file) {
-      await fs.unlink('BlogPicture/' + deleteonebyid.Data.file, (err) => {
+    if (deleteonebyid?.file) {
+      await fs.unlink('BlogPicture/' + deleteonebyid.file, (err) => {
         if (err) {
           console.log(err);
         }
@@ -49,7 +51,7 @@ export class BlogAppService {
     const updatedBlog = await this.ModelBlog.findOneAndUpdate(
       { _id: id },
       { $pull: { 'Data.Datacomement': { _id: idnest } } },
-      { new: true }, // This option returns the modified document
+      { new: true },
     );
 
     return updatedBlog;
@@ -61,5 +63,36 @@ export class BlogAppService {
       { $push: { 'Data.Datacomement': commentdata } },
     );
     return postcomment;
+  }
+  async seeusermame(): Promise<any> {
+    return this.ModelAuth.find();
+  }
+
+  async findoneuser(id: string): Promise<BlogSchema> {
+    return this.ModelAuth.findById(id);
+  }
+
+  async pushuserblog({ ...Data }): Promise<any> {
+    const filename = Data.file.filename;
+    const id = Data.id;
+    const namelater = {
+      title: Data.req.title,
+      description: Data.req.description,
+      file: filename,
+      comment: Data.req.comment,
+    };
+    const push = await this.ModelAuth.findOneAndUpdate(
+      { _id: id },
+      { $push: { Blog: namelater } },
+    );
+    return push;
+  }
+
+  async deleteuserblog(id: string, idblog: string): Promise<any> {
+    const deleteblog = await this.ModelAuth.findByIdAndDelete(
+      { _id: id },
+      { $pull: { Blog: { _id: idblog } } },
+    );
+    return deleteblog;
   }
 }
