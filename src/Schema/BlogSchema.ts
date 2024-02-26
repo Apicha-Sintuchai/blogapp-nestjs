@@ -17,7 +17,7 @@ export class BlogSchema {
     @Prop()
     description: string;
     
-    @Prop()
+    @Prop({default:'noimage'})
     file: string;
 
     @Prop({type:mongoose.Schema.Types.ObjectId,ref:'Auth'})

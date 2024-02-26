@@ -8,7 +8,6 @@ import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { Auth, AuthSchema } from 'src/Schema/AuthSchema';
 import { AuthModule } from 'src/auth/auth.module';
-
 @Module({
   imports: [
     MongooseModule.forFeature([

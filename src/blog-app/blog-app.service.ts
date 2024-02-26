@@ -27,7 +27,11 @@ export class BlogAppService {
     });
     return createdBlog.save();
   }
-  async deleteone(id: any): Promise<BlogSchema> {
+  async deleteone(id: any): Promise<any> {
+    const schemaid = await this.ModelAuth.findOneAndUpdate(
+      { BlogID: id },
+      { $pull: { BlogID: id } },
+    );
     const deleteonebyid = await this.ModelBlog.findOneAndDelete({ _id: id });
     if (deleteonebyid?.file) {
       await fs.unlink('BlogPicture/' + deleteonebyid.file, (err) => {
@@ -36,7 +40,7 @@ export class BlogAppService {
         }
       });
     }
-    return deleteonebyid;
+    return { deleteonebyid, schemaid };
   }
 
   async putonenest(id: string, Data): Promise<BlogSchema> {
@@ -66,34 +70,26 @@ export class BlogAppService {
     return postcomment;
   }
   async seeusermame(): Promise<any> {
-    return this.ModelAuth.find();
+    return this.ModelAuth.find().populate('BlogID');
   }
 
   async findoneuser(id: string): Promise<BlogSchema> {
-    return this.ModelAuth.findById(id);
+    return this.ModelAuth.findById(id).populate('BlogID');
   }
 
-  async pushuserblog({ ...Data }): Promise<any> {
+  async letnamelater({ ...Data }): Promise<any> {
     const filename = Data.file.filename;
-    const id = Data.id;
-    const namelater = {
+    const passdata = {
       title: Data.req.title,
       description: Data.req.description,
       file: filename,
-      comment: Data.req.comment,
     };
-    const push = await this.ModelAuth.findOneAndUpdate(
-      { _id: id },
-      { $push: { Blog: namelater } },
+    const savepost = await new this.ModelBlog(passdata);
+    savepost.save();
+    const refupdate = await this.ModelAuth.findOneAndUpdate(
+      { _id: Data.id },
+      { $push: { BlogID: savepost._id } },
     );
-    return push;
-  }
-
-  async deleteuserblog(id: string, idblog: string): Promise<any> {
-    const deleteblog = await this.ModelAuth.findByIdAndDelete(
-      { _id: id },
-      { $pull: { Blog: { _id: idblog } } },
-    );
-    return deleteblog;
+    return refupdate;
   }
 }
