@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
 import { BlogAppController } from './blog-app.controller';
 import { BlogAppService } from './blog-app.service';
