@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
@@ -13,6 +14,7 @@ export class AuthService {
   ) {}
 
   async SignUp(SignUp: any): Promise<any> {
+
     const { username, password, post } = SignUp;
 
     const hastpassword = await bcrypt.hash(password, 10);
@@ -27,10 +29,10 @@ export class AuthService {
       password: hastpassword,
       post,
     });
-
+     
     const token = this.jwtService.sign({ id: user._id });
 
-    return { token };
+    return { username,password };
   }
 
   async login(Signin: any): Promise<any> {
@@ -48,7 +50,7 @@ export class AuthService {
     }
 
     const token = this.jwtService.sign({ id: user._id });
-
-    return { token };
+    const _id = user._id;
+    return { token, username,password,_id };
   }
 }

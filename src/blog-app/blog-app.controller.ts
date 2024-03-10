@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream
 /* eslint-disable prettier/prettier */
-=======
-/* eslint-disable @typescript-eslint/no-unused-vars */
->>>>>>> Stashed changes
 import {
   Body,
   Controller,
@@ -11,12 +7,12 @@ import {
   Param,
   Post,
   UploadedFile,
-  UseGuards,
+ 
   UseInterceptors,
 } from '@nestjs/common';
 import { BlogAppService } from './blog-app.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { AuthGuard } from '@nestjs/passport';
+// import { AuthGuard } from '@nestjs/passport';
 
 @Controller('blog-app')
 export class BlogAppController {
@@ -37,7 +33,7 @@ export class BlogAppController {
     return this.ControllerBlogApp.seeusermame();
   }
   // @UseGuards(AuthGuard())
-  @Get('Seeuser/:id')
+  @Get('Seeusers/:id')
   async getone(@Param('id') id: string) {
     console.log(id);
     return this.ControllerBlogApp.findoneuser(id);

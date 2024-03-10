@@ -1,4 +1,5 @@
-import { Body, Controller, Post } from '@nestjs/common';
+/* eslint-disable prettier/prettier */
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
@@ -13,4 +14,6 @@ export class AuthController {
   async SignIn(@Body() req): Promise<any> {
     return await this.AuthControll.login(req);
   }
+
+  
 }
