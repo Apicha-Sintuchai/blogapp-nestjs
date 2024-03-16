@@ -15,7 +15,7 @@ export class BlogAppService {
   ) {}
 
   async findAll(): Promise<BlogSchema[]> {
-    return this.ModelBlog.find().sort({ 'Data.HearderPost': 1 });
+    return this.ModelBlog.find().sort({ title: -1 });
   }
   async create({ ...Data }): Promise<BlogSchema> {
     const filename = Data.file.filename;
@@ -34,7 +34,7 @@ export class BlogAppService {
     );
     const deleteonebyid = await this.ModelBlog.findOneAndDelete({ _id: id });
     if (deleteonebyid?.file) {
-      await fs.unlink('BlogPicture/' + deleteonebyid.file, (err) => {
+      await fs.unlink('Picsave/' + deleteonebyid.file, (err) => {
         if (err) {
           console.log(err);
         }
@@ -70,11 +70,14 @@ export class BlogAppService {
     return postcomment;
   }
   async seeusermame(): Promise<any> {
-    return this.ModelAuth.find().populate('BlogID');
+    return this.ModelAuth.find()
+      .sort({ BlogID: -1 })
+      .select('-password')
+      .populate('BlogID');
   }
 
   async findoneuser(id: string): Promise<BlogSchema> {
-    return this.ModelAuth.findById(id).populate('BlogID');
+    return this.ModelAuth.findById(id).select('-password').populate('BlogID');
   }
 
   async letnamelater({ ...Data }): Promise<any> {
@@ -91,5 +94,20 @@ export class BlogAppService {
       { $push: { BlogID: savepost._id } },
     );
     return refupdate;
+  }
+
+  async increaselink(id: string): Promise<BlogSchema> {
+    const increase = await this.ModelBlog.findOneAndUpdate(
+      { _id: id },
+      { $inc: { like: 1 } },
+    );
+    return increase;
+  }
+  async decreaselink(id: string): Promise<BlogSchema> {
+    const increase = await this.ModelBlog.findOneAndUpdate(
+      { _id: id },
+      { $inc: { like: -1 } },
+    );
+    return increase;
   }
 }

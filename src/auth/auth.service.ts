@@ -38,19 +38,22 @@ export class AuthService {
   async login(Signin: any): Promise<any> {
     const { username, password } = Signin;
 
+    
     const user = await this.AuthModel.findOne({ username });
+
     if (!user) {
-      throw new UnauthorizedException('username is not found');
+      return new UnauthorizedException('Your username is not correct',{description:'Your username is not correct'});
     }
 
     const ismatch = await bcrypt.compare(password, user.password);
 
     if (!ismatch) {
-      throw new UnauthorizedException('password is not found');
+      return new UnauthorizedException('Your password is not correct',{description:'Your password is not correct'});
     }
-
-    const token = this.jwtService.sign({ id: user._id });
     const _id = user._id;
-    return { token, username,password,_id };
+    const token = this.jwtService.sign({ id: user._id, username: user.username,password:user.password});
+    
+    return { token, username,password, _id };
   }
+
 }

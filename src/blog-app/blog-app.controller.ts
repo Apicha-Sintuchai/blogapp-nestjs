@@ -6,18 +6,21 @@ import {
   Get,
   Param,
   Post,
+  Put,
   UploadedFile,
+ 
+  UseGuards,
  
   UseInterceptors,
 } from '@nestjs/common';
 import { BlogAppService } from './blog-app.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-// import { AuthGuard } from '@nestjs/passport';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('blog-app')
 export class BlogAppController {
   constructor(private readonly ControllerBlogApp: BlogAppService) {}
-  // @UseGuards(AuthGuard())
+  @UseGuards(AuthGuard())
   @Get()
   async findAll() {
     return await this.ControllerBlogApp.findAll();
@@ -32,10 +35,10 @@ export class BlogAppController {
   async getall() {
     return this.ControllerBlogApp.seeusermame();
   }
-  // @UseGuards(AuthGuard())
+  @UseGuards(AuthGuard())
   @Get('Seeusers/:id')
   async getone(@Param('id') id: string) {
-    console.log(id);
+
     return this.ControllerBlogApp.findoneuser(id);
   }
 
@@ -51,6 +54,16 @@ export class BlogAppController {
       req,
       file,
     };
+    
     return this.ControllerBlogApp.letnamelater(passall);
+  }
+
+  @Put('increment/:wherepost')
+  async increment(@Param('wherepost') wherepost: string) {
+    return this.ControllerBlogApp.increaselink(wherepost);
+  }
+  @Put('decrement/:wherepost')
+  async decrement(@Param('wherepost') wherepost: string) {
+    return this.ControllerBlogApp.decreaselink(wherepost);
   }
 }

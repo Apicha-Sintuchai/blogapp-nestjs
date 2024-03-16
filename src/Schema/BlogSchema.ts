@@ -20,8 +20,8 @@ export class BlogSchema {
     @Prop({default:'noimage'})
     file: string;
 
-    @Prop({type:mongoose.Schema.Types.ObjectId,ref:'Auth'})
-    AuthID:Auth
+   @Prop({default:0})
+    like: number;
     
     
 
