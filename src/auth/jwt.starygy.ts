@@ -26,12 +26,9 @@ export class JwtStrategy  extends PassportStrategy(Strategy){
 
         const user = await this.usermodel.findById(id)
 
-        console.log(payload)
         if(!user){
-            throw new UnauthorizedException("Login first")
+            throw new UnauthorizedException({description:'Your username is not correct'})
         }
-
-        
         return user
     }
 }

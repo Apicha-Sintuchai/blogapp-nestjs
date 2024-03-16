@@ -43,32 +43,7 @@ export class BlogAppService {
     return { deleteonebyid, schemaid };
   }
 
-  async putonenest(id: string, Data): Promise<BlogSchema> {
-    console.log(Data);
-    const putonee = await this.ModelBlog.findOneAndUpdate(
-      { 'Data.Datacomement._id': id },
-      { $set: { 'Data.Datacomement.$': Data } },
-    );
 
-    return putonee;
-  }
-  async deleteNest(id: string, idnest: string): Promise<BlogSchema> {
-    const updatedBlog = await this.ModelBlog.findOneAndUpdate(
-      { _id: id },
-      { $pull: { 'Data.Datacomement': { _id: idnest } } },
-      { new: true },
-    );
-
-    return updatedBlog;
-  }
-
-  async postcomment(id: string, commentdata): Promise<BlogSchema> {
-    const postcomment = await this.ModelBlog.findByIdAndUpdate(
-      { _id: id },
-      { $push: { 'Data.Datacomement': commentdata } },
-    );
-    return postcomment;
-  }
   async seeusermame(): Promise<any> {
     return this.ModelAuth.find()
       .sort({ BlogID: -1 })
@@ -79,8 +54,11 @@ export class BlogAppService {
   async findoneuser(id: string): Promise<BlogSchema> {
     return this.ModelAuth.findById(id).select('-password').populate('BlogID');
   }
-
+  async testtoken({ id }){
+    return this.ModelAuth.findById(id).select('-password').populate('BlogID');
+  }
   async letnamelater({ ...Data }): Promise<any> {
+    
     const filename = Data.file.filename;
     const passdata = {
       title: Data.req.title,
@@ -90,7 +68,7 @@ export class BlogAppService {
     const savepost = await new this.ModelBlog(passdata);
     savepost.save();
     const refupdate = await this.ModelAuth.findOneAndUpdate(
-      { _id: Data.id },
+      { _id: Data.iduser },
       { $push: { BlogID: savepost._id } },
     );
     return refupdate;
