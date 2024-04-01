@@ -24,7 +24,9 @@ import { join } from 'path';
       rootPath: join(__dirname, '..', 'Picsave'),
     })
   ],
-  controllers: [],
+  controllers: [
+    
+  ],
   providers: [],
 })
 export class AppModule {}
