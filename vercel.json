@@ -1,0 +1,27 @@
+{
+    "version": 2,
+    "env": {
+        "DB_URL": "mongodb://localhost:27017/blogApp",
+        "JWT_EXPIRE" : "7d",
+        "JWT_SECRET" : "KeyinKey"
+    },
+    "builds": [
+        {
+            "src": "src/main.ts",
+            "use": "@vercel/node"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "src/main.ts",
+            "methods": [
+                "GET",
+                "POST",
+                "patch",
+                "PUT",
+                "DELETE"
+            ]
+        }
+    ]
+}

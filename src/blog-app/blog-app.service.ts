@@ -45,10 +45,14 @@ export class BlogAppService {
 
 
   async seeusermame(): Promise<any> {
-    return this.ModelAuth.find()
-      .sort({ BlogID: -1 })
+    return await this.ModelAuth.find()
+
       .select('-password')
-      .populate('BlogID');
+      .populate({
+        path:'BlogID',
+      })
+  .sort({'BlogID.title': -1})
+  .exec();  
   }
 
   async findoneuser(id: string): Promise<BlogSchema> {

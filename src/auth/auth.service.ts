@@ -51,9 +51,9 @@ export class AuthService {
       return new UnauthorizedException('Your password is not correct',{description:'Your password is not correct'});
     }
     const _id = user._id;
-    const token = this.jwtService.sign({ id: user._id, username: user.username,password:user.password});
+    const token = this.jwtService.sign({ id: user._id });
     
-    return { token };
+    return { "token":token,"userid":_id };
   }
 
 }
