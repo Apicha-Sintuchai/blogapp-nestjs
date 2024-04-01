@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { ArrModule } from './arr/arr.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { appcontroller } from './app.controller';
 @Module({
   imports: [
     BlogAppModule,
@@ -25,7 +26,7 @@ import { join } from 'path';
     })
   ],
   controllers: [
-    
+    appcontroller
   ],
   providers: [],
 })
