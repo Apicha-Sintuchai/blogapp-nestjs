@@ -40,6 +40,13 @@ export class BlogAppController {
     return this.ControllerBlogApp.decreaselink(wherepost);
   }
 
+
+  @Post('test555')
+  testargregate(@Body() req , @UploadedFile() file){
+    console.log(req),
+    console.log(file)
+  }
+
   //------------------------------------------need token to do something--------------------------------------------------------------------------//
 
   @UseGuards(AuthGuard())

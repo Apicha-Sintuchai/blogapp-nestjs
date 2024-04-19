@@ -92,4 +92,15 @@ export class BlogAppService {
     );
     return increase;
   }
+
+  async testargregate(id,data):Promise<any>{
+    const save = new this.ModelBlog({
+      iduser:id,
+      title:data.title,
+      description:data.description,
+      file:data.file,
+    })
+    save.save()
+    return save;
+  }
 }

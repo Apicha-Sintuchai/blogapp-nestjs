@@ -23,8 +23,9 @@ export class BlogSchema {
    @Prop({default:0})
     like: number;
     
+    @Prop({type:{type:mongoose.Schema.Types.ObjectId,ref:'Auth'}})
+    iduser:Auth
     
-
 
 }
 
